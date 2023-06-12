@@ -19,19 +19,19 @@ Esta funcion se encarga de mostrar por el display LCD un mensaje.
 
 
 <!--- ACA PUEDO ESCRIBIR BLOQUES DE CODIGO-->
-```
+~~~ 
 void mostrarMensajeLcd(int posCaracter,int posFila, char* mensaje) // muestro por pantalla del lcd
 {
   lcd.setCursor(posCaracter,posFila);
   lcd.print(mensaje);
 }
-```
+~~~ 
 
 ## Funcion 2
 Se encarga de mover el servo desde su posicion inicial 0 grados hasta su posicion final 180 grados y luego regresa a su posicion inicial, esto ocurre con un delay de 1500 milisegundos en cada movimiento.
 * Dentro del servo1.write se le pasa por parametro los grados que se desea.
 
-```
+~~~ 
 void moverServo()
 {
   servo1.write(180);
@@ -40,7 +40,7 @@ void moverServo()
   servo1.write(0);
   delay(1500);
 }
-```
+~~~ 
 
 
 ## Funcion 3
@@ -52,7 +52,7 @@ Esta funcion nos retorna la estacion del año segundo el boton que se haya presi
 * Por ultimo retornamos dicho valor.
 
 
-```
+~~~ 
 char* controlRemoto(char* boton) 
 {	
   
@@ -83,13 +83,13 @@ char* controlRemoto(char* boton)
   
   return boton;
 }
-```
+~~~ 
 
 ## Funcion 4
 Se encarga de encender un led verde si la temperatura de la estacion se encuentra dentro de los parametros normales y en caso de haber un incendio se enciende el led rojo.
 * Primer parametro: Se pasa una variable del tipo booleano donde va contener el valor "false" si no hay un incendio y "true" si hay un incendio.
 * Dentro del digitalWrite se pasan por parametro el pin donde se encuentra conectado el led y 1 (encender), 0 (apagar)
-```
+~~~ 
 void prenderLeds(bool incendio)
 {
   if(incendio == false)
@@ -104,7 +104,7 @@ void prenderLeds(bool incendio)
   }
   
 }
-```
+~~~ 
 
 
 
