@@ -10,6 +10,10 @@
 
 Es un sistema de incendio el cual muestra por pantalla lcd la temperatura actual y la estacion del año. En caso de ocurrir un incendio nos avisa mediante un led rojo y por la pantalla. Esta misma muestra un mensaje de aviso "INCENDIO" y la respectiva temperatura. En ese preciso momento se activa el servo para poder apagar el incendio, una vez apagado el incendio automaticamente se apaga el servo.
 
+## Diagrama Esquematico
+
+![diagrama Esquematico](diagramaEsquematico.png)
+
 ## Funcion 1
 
 Esta funcion se encarga de mostrar por el display LCD un mensaje.
@@ -25,7 +29,7 @@ void mostrarMensajeLcd(int posCaracter,int posFila, char* mensaje) // muestro po
   lcd.setCursor(posCaracter,posFila);
   lcd.print(mensaje);
 }
-``` 
+```
 
 ## Funcion 2
 Se encarga de mover el servo desde su posicion inicial 0 grados hasta su posicion final 180 grados y luego regresa a su posicion inicial, esto ocurre con un delay de 1500 milisegundos en cada movimiento.
@@ -113,3 +117,7 @@ void prenderLeds(bool incendio)
 ## :clipboard: Link al proyecto
 
 * [Mi proyecto](https://www.tinkercad.com/things/fmW1sei6T9f-tp-final/editel?sharecode=CpSwpL86V16bdi4K2PIToDubjAG0VT-5DTiESs7qGQw)
+
+## :movie_camera: Video del proyecto
+
+* [Mi video](https://youtu.be/wsj18ZLQi-s)
