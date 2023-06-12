@@ -1,0 +1,205 @@
+//NOMBRE: AGUSTIN MATIAS GARCIA NAVAS
+
+//BIBLIOTECA DEL LED
+#include <LiquidCrystal.h> 
+
+//BIBLIOTECA DEL SERVO
+#include <Servo.h>
+
+//BIBLIOTECA DEL CONTROL REMOTO
+#include <IRremote.h>
+
+IRrecv IR(3); //inicializo el sensor de recepcion IR
+
+
+//INICIALIZO EL LCD
+LiquidCrystal lcd(4, 5, 6, 7, 8, 9); //defino los pines conectado
+
+//creo el objeto servo
+Servo servo1;
+
+//DEFINO LEDS
+#define LED_VERDE A5
+#define LED_ROJO A4
+
+
+//TEMPERATURA
+int sensorTemp;
+char* temporada = "Verano";
+
+//funcion muestra por un mensaje por el lcd
+void mostrarMensajeLcd(int posFila,int posCaracter, char* mensaje);
+
+char mensaje[16];
+
+char primerMensaje[16];
+
+//mueve el servo
+void moverServo(int tiempo);
+
+//VALIDADOR DE INCENDIO
+bool incendio = false;
+
+//funcion prende los leds segun si hay incendio o no
+void prenderLeds(bool incendio);
+
+
+void setup()
+{
+  //LCD
+  lcd.begin(16,2);
+ 
+  //TEMPERATURA
+  pinMode(A0,INPUT);
+  
+  //SERVO
+  servo1.attach(11,200,2500);
+  
+  //RECEPTOR DEL CONTROL REMOTO
+  IR.enableIRIn();
+  
+  //LEDS
+  pinMode(LED_VERDE,OUTPUT);
+  pinMode(LED_ROJO,OUTPUT);
+  
+  //MOSTRAR POR PANTALLA
+  Serial.begin(9600);
+}
+
+void loop()
+{
+   servo1.write(0); //para que vuelva a la posicion 0 ya que inicia a 90
+	
+  //obtengo la temperatura
+  sensorTemp = analogRead(A0); //leo la temp
+  int temperatura = map(sensorTemp,20,358,-40,125); //la transformo a ªc
+  
+  temporada = controlRemoto(temporada); //boton presionado retorna la estacion
+  
+  sprintf(mensaje, "Temp: %3d", temperatura); // concateno una cadena y un entero en la
+												   // '%3d' indico hasta 3 digitos del tipo int
+  
+  if(temporada == "Verano" && temperatura > 80)
+  {
+    incendio = true;
+
+  }
+  else if(temporada == "Otono" && temperatura > 60)
+  {
+    incendio = true;
+
+  }
+  else if(temporada == "Invierno" && temperatura > 40)
+  {
+    incendio = true;
+
+  }
+  else if(temporada == "Primavera" && temperatura > 50)
+  {
+    incendio = true;
+
+  }
+  else
+  {
+    incendio = false;
+    
+  }
+  
+  prenderLeds(incendio); //prende el led segun el estado del incendio(true o false)
+
+  if(incendio == true)
+  {
+    mostrarMensajeLcd(0,0,"INCENDIO PELIGRO!    ");
+    mostrarMensajeLcd(0,1,mensaje);
+    lcd.print("C");
+  	moverServo();
+    
+  }
+  else
+  {
+    mostrarMensajeLcd(0,0,"Est: ");
+    mostrarMensajeLcd(5,0,temporada);
+    lcd.print("         ");
+    mostrarMensajeLcd(0,1,mensaje);
+    lcd.print("C");
+    
+  }
+  
+  
+  
+  Serial.println(temperatura);
+  
+}
+void mostrarMensajeLcd(int posCaracter,int posFila, char* mensaje) // muestro por pantalla del lcd
+{
+  lcd.setCursor(posCaracter,posFila);
+  lcd.print(mensaje);
+  
+}
+void moverServo() //indico el tiempo de delay para el movimiento
+{
+   
+  servo1.write(180);
+  delay(1500);
+  
+  servo1.write(0);
+  delay(1500);
+  
+}
+char* controlRemoto(char* boton) 
+  							 
+{	
+  
+  if(IR.decode()) //verifica si se recibio una señal del control remoto
+  {	
+  	//Serial.print(IR.decodedIRData.decodedRawData,HEX); //imprimo la señal recibida del control remoto
+    
+    if(IR.decodedIRData.decodedRawData == 0xEF10BF00)   //boton 1 = EF10BF00 (USAR PREFIJO 0x  siempre y luego el valor hexa)
+    {
+      
+      boton = "Verano"; // VERANO
+    }
+    else if(IR.decodedIRData.decodedRawData == 0xEE11BF00)  //boton 2 = EE11BF00
+    {
+      
+      boton = "Otono"; // OTOñO
+    }
+    else if(IR.decodedIRData.decodedRawData == 0xED12BF00)  //boton 3 = ED12BF00
+    {
+      
+      boton = "Invierno"; // INVIERNO
+    }
+    else if(IR.decodedIRData.decodedRawData == 0xEB14BF00)  //boton 4 = EB14BF00
+    {
+      
+      boton = "Primavera"; //PRIMAVERA
+    }
+    
+    delay(10);
+    IR.resume(); //restauro para poder recibir otra señal
+          
+  }
+  
+  return boton;
+}
+
+void prenderLeds(bool incendio)
+{
+  if(incendio == false)
+  {
+    digitalWrite(LED_VERDE,1);
+    digitalWrite(LED_ROJO,0);
+    
+  }
+  else if(incendio == true)
+  {	
+    digitalWrite(LED_VERDE,0);
+    digitalWrite(LED_ROJO,1);
+    
+  }
+  
+}
+
+  
+  
+  
