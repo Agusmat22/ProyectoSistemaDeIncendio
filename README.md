@@ -14,6 +14,72 @@ Es un sistema de incendio el cual muestra por pantalla lcd la temperatura actual
 
 ![diagrama Esquematico](diagramaEsquematico.png)
 
+## Codigo Principal
+
+En este fragmento de codigo es donde se ejecuta la logica del programa, donde en primera instancia se inicaliza el servo en la posicion 0, luego recibimos los valores del sensor de temperatura y se realiza un map para indicar que el valor debe ir desde -40c hasta 125c. Se crea un mensaje en donde se concatena el valor de la variable temperatura con un mensaje del tipo string y por ultimo se realiza las respectivas validaciones para saber si ocurre un incendio o no, en caso que si ejecutaran ls respectivas funciones.
+
+```c++
+void loop()
+{
+  servo1.write(0); //para que vuelva a la posicion 0 ya que inicia a 90
+	
+  //obtengo la temperatura
+  sensorTemp = analogRead(A0); //leo la temp
+  int temperatura = map(sensorTemp,20,358,-40,125); //la transformo a ªc
+  
+  temporada = controlRemoto(temporada);
+  
+  sprintf(mensaje, "Temp: %3d", temperatura); // concateno una cadena y un entero en la
+												   
+  if(temporada == "Verano" && temperatura > 80)
+  {
+    incendio = true;
+
+  }
+  else if(temporada == "Otono" && temperatura > 60)
+  {
+    incendio = true;
+
+  }
+  else if(temporada == "Invierno" && temperatura > 40)
+  {
+    incendio = true;
+
+  }
+  else if(temporada == "Primavera" && temperatura > 50)
+  {
+    incendio = true;
+
+  }
+  else
+  {
+    incendio = false;
+    
+  }
+  
+  prenderLeds(incendio); //prende el led segun el estado del incendio(true o false)
+
+  if(incendio == true)
+  {
+    mostrarMensajeLcd(0,0,"INCENDIO PELIGRO!    ");
+    mostrarMensajeLcd(0,1,mensaje);
+  	moverServo();
+    
+  }
+  else
+  {
+    mostrarMensajeLcd(0,0,"Est: ");
+    mostrarMensajeLcd(5,0,temporada);
+    lcd.print("         ");
+    mostrarMensajeLcd(0,1,mensaje);
+    lcd.print("C"); 
+  }
+  Serial.println(temperatura);
+  
+}
+```
+
+
 ## Funcion 1
 
 Esta funcion se encarga de mostrar por el display LCD un mensaje.
