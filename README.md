@@ -10,6 +10,17 @@
 
 Es un sistema de incendio el cual muestra por pantalla lcd la temperatura actual y la estacion del año. En caso de ocurrir un incendio nos avisa mediante un led rojo y por la pantalla. Esta misma muestra un mensaje de aviso "INCENDIO" y la respectiva temperatura. En ese preciso momento se activa el servo para poder apagar el incendio, una vez apagado el incendio automaticamente se apaga el servo.
 
+## Componentes utilizados
+* Arduino Uno
+* 2 leds
+* Servo
+* Display Lcd
+* Senson Temperatura
+* Sensor IF
+* Control Remoto IF
+* 3 resistencias
+
+
 ## Diagrama Esquematico
 
 ![diagrama Esquematico](diagramaEsquematico.png)
